@@ -12,11 +12,6 @@ class UserSeeder extends Seeder
    */
   public function run()
   {
-    factory(User::class, 5)->create()->each(function ($user) {
-      $user->emailToken()->create([
-        '_token' => str_random(32),
-        'expired_at' => \Carbon\Carbon::now()->addDays(14)
-      ]);
-    });;
+    factory(User::class, 5)->create();
   }
 }
