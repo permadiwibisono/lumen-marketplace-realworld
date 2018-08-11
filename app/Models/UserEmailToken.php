@@ -12,6 +12,6 @@ class UserEmailToken extends Model
 
   public function user()
   {
-    return $this->morpTo(null, 'user_id', 'type');
+    return $this->morphTo(null, 'type', 'user_id');
   }
 }
