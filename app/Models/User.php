@@ -11,30 +11,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
-    use Authenticatable, Authorizable, SoftDeletes;
+  use Authenticatable, Authorizable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $guarded = [];
 
-    protected $table = 'user';
+  protected $table = 'user';
 
-    protected $dates = ['birth_at', 'deleted_at', 'created_at', 'updated_at'];
+  protected $dates = ['birth_at', 'deleted_at', 'created_at', 'updated_at'];
 
-    protected $casts = [
-        'is_verified_email' => 'boolean',
-        'is_suspended' => 'boolean'
-    ];
+  protected $casts = [
+    'is_verified_email' => 'boolean',
+    'is_suspended' => 'boolean'
+  ];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password'
-    ];
+  /**
+   * The attributes excluded from the model's JSON form.
+   *
+   * @var array
+   */
+  protected $hidden = [
+    'password'
+  ];
+
+  public function emailToken()
+  {
+    return $this->morphOne('App\Models\UserEmailToken', 'user', 'type', 'user_id'); 
+  }
 }
