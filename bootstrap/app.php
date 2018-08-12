@@ -29,6 +29,15 @@ $app->withFacades();
 
 $app->withEloquent();
 
+if(!class_exists('DingoApi'))
+  class_alias('Dingo\Api\Facade\API', 'DingoApi');
+
+if(!class_exists('DingoRoute'))
+  class_alias('Dingo\Api\Facade\Route', 'DingoRoute');
+
+if (!class_exists('Config'))
+  class_alias('Illuminate\Support\Facades\Config', 'Config');
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -80,16 +89,32 @@ $app->singleton(
 |
 */
 
-if(class_exists('App\Providers\AppServiceProvider')) {
+if(class_exists('App\Providers\AppServiceProvider'))
   $app->register(App\Providers\AppServiceProvider::class);
-}
 
-if(class_exists('Laravel\Tinker\TinkerServiceProvider')) {
+if(class_exists('Laravel\Tinker\TinkerServiceProvider'))
   $app->register(Laravel\Tinker\TinkerServiceProvider::class);
-}
+
+if(class_exists('Dingo\Api\Provider\LumenServiceProvider'))
+  $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+
+$app['Dingo\Api\Http\RateLimit\Handler']->extend(function ($app) {
+    return new Dingo\Api\Http\RateLimit\Throttle\Authenticated;
+});
+
+$app['Dingo\Api\Exception\Handler']->setErrorFormat([
+  'error' => [
+    'message' => ':message',
+    'errors' => ':errors',
+    'code' => ':code',
+    'status_code' => ':status_code',
+    'debug' => ':debug'
+  ]
+]);
 
 /*
 |--------------------------------------------------------------------------
