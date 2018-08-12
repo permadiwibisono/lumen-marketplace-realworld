@@ -17,12 +17,12 @@
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers'], function($api) use($router){
   $api->get('/', function() use($router){
-    return response()->json(['message'=>'MarketplaceS\'s API','status_code'=>200,'framework'=>$router->app->version()],200);
+    return response()->json(['message'=>'Marketplace\'s API','status_code'=>200,'framework'=>$router->app->version()],200);
   });
   $api->get('/hello', 'ExampleController@index'); 
 });
 $api->version('v2', function($api) use($router){
   $api->get('/', function() use($router){
-    return response()->json(['message'=>'MarketplaceS\'s API v2','status_code'=>200,'framework'=>$router->app->version()],200);
+    return response()->json(['message'=>'Marketplace\'s API v2','status_code'=>200,'framework'=>$router->app->version()],200);
   }); 
 });
