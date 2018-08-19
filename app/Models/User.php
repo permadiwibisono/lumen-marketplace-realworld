@@ -42,4 +42,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
   {
     return $this->morphOne('App\Models\UserEmailToken', 'user', 'type', 'user_id'); 
   }
+  public function wallet()
+  {
+    return $this->hasOne('App\Models\UserWallet'); 
+  }
 }
