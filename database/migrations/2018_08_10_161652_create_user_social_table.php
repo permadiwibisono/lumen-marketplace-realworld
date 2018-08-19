@@ -6,29 +6,29 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUserSocialTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('user_social', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->string('external_id')->nullable();
-            $table->enum('type', ['facebook', 'github', 'google']);
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('user_social', function (Blueprint $table) {
+      $table->increments('id');
+      $table->unsignedInteger('user_id');
+      $table->string('external_id')->nullable();
+      $table->enum('type', ['facebook', 'github', 'google']);
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('user_social');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('user_social');
+  }
 }
