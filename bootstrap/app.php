@@ -24,6 +24,7 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->configure('database');
+$app->configure('auth');
 
 $app->withFacades();
 
@@ -74,9 +75,9 @@ $app->singleton(
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+  'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -98,8 +99,12 @@ if(class_exists('Laravel\Tinker\TinkerServiceProvider'))
 if(class_exists('Dingo\Api\Provider\LumenServiceProvider'))
   $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+if(class_exists('App\Providers\AuthServiceProvider'))
+  $app->register(App\Providers\AuthServiceProvider::class);
+
+if(class_exists('Tymon\JWTAuth\Providers\LumenServiceProvider'))
+  $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
 // $app->register(App\Providers\EventServiceProvider::class);
 
 $app['Dingo\Api\Http\RateLimit\Handler']->extend(function ($app) {
