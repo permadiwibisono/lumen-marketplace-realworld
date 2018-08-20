@@ -4,9 +4,12 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use App\Http\Traits\ResponseHelpers;
 
 class Authenticate
 {
+  use ResponseHelpers;
+  
   /**
    * The authentication guard factory instance.
    *
@@ -36,7 +39,7 @@ class Authenticate
   public function handle($request, Closure $next, $guard = null)
   {
     if ($this->auth->guard($guard)->guest()) {
-      return response()->json(['message' => 'Unauthorized.', 'status_code' => 401], 401);
+      return $this->response->errorUnauthorized();
     }
     return $next($request);
   }

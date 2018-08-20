@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ResponseHelpers;
 use Dingo\Api\Http\Request;
+use Validator;
 
 class AuthController extends Controller
 {
+  use ResponseHelpers;
+
   /**
    * Create a new AuthController instance.
    *
@@ -25,12 +29,19 @@ class AuthController extends Controller
   public function login(Request $request)
   {
     $credentials = $request->only(['email', 'password']);
+    $validator = Validator::make($credentials, [
+      'email' => 'required|email',
+      'password' => 'required',
+    ]);
 
+    if($validator->fails()){
+      return $this->createValidationErrorResponse($validator);
+    }
     if (! $token = auth()->attempt($credentials)) {
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return $this->response->errorUnauthorized();
     }
 
-    return $this->respondWithToken($token);
+    return $this->respondWithToken($token, 'Login successfully.');
   }
 
   /**
@@ -40,7 +51,7 @@ class AuthController extends Controller
    */
   public function me()
   {
-    return response()->json(auth()->user());
+    return $this->createResponse(auth()->user(), 'Get user profile.');
   }
 
   /**
@@ -52,7 +63,7 @@ class AuthController extends Controller
   {
     auth()->logout();
 
-    return response()->json(['message' => 'Successfully logged out']);
+    return $this->createResponse(null, 'Successfully logged out.');
   }
 
   /**
@@ -62,7 +73,7 @@ class AuthController extends Controller
    */
   public function refresh()
   {
-    return $this->respondWithToken(auth()->refresh());
+    return $this->respondWithToken(auth()->refresh(), 'Token refresh successfully.');
   }
 
   /**
@@ -72,12 +83,12 @@ class AuthController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  protected function respondWithToken($token)
+  protected function respondWithToken($token, $message)
   {
-    return response()->json([
+    return $this->createResponse([
       'access_token' => $token,
       'token_type' => 'bearer',
       'expires_in' => auth()->factory()->getTTL() * 60
-    ]);
+    ], $message);
   }
 }
