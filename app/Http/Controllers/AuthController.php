@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Contracts\IAuth as IAuthContractController;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ResponseHelpers;
 use App\Models\User;
 use Dingo\Api\Http\Request;
 use Validator;
 
-class AuthController extends Controller
+class AuthController extends Controller implements IAuthContractController
 {
   use ResponseHelpers;
 
@@ -108,7 +109,7 @@ class AuthController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  protected function respondWithToken($token, $message)
+  public function respondWithToken(string $token, string $message)
   {
     return $this->createResponse([
       'access_token' => $token,
