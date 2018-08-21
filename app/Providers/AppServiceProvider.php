@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Models\UserAdmin;
+use App\Observers\UserAdminObserver;
 use App\Observers\UserObserver;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\ServiceProvider;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -18,8 +20,10 @@ class AppServiceProvider extends ServiceProvider
   public function boot()
   {
     User::observe(UserObserver::class);
+    UserAdmin::observe(UserAdminObserver::class);
     Relation::morphMap([
-      'user' => 'App\Models\User'
+      'user' => 'App\Models\User',
+      'user_admin' => 'App\Models\UserAdmin',
     ]);
   }
 
