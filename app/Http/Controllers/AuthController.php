@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ResponseHelpers;
+use App\Models\User;
 use Dingo\Api\Http\Request;
 use Validator;
 
@@ -18,7 +19,7 @@ class AuthController extends Controller
    */
   public function __construct()
   {
-    $this->middleware('auth:api', ['except' => ['login']]);
+    $this->middleware('auth:api', ['except' => ['login', 'register']]);
   }
 
   /**
@@ -42,6 +43,30 @@ class AuthController extends Controller
     }
 
     return $this->respondWithToken($token, 'Login successfully.');
+  }
+
+  /**
+   * Register an user
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function register(Request $request)
+  {
+    $credentials = $request->only(['email', 'password', 'confirm_password']);
+    $validator = Validator::make($credentials, [
+      'email' => 'required|email|unique:user,email',
+      'password' => 'required'
+    ]);
+    if($validator->fails()){
+      return $this->createValidationErrorResponse($validator);
+    }
+
+    $user = User::create(['email' => $credentials['email'], 'password' => app('hash')->make($credentials['password'])]);
+    if (! $token = auth()->attempt($credentials)) {
+      return $this->response->errorUnauthorized();
+    }
+
+    return $this->respondWithToken($token, 'Register successfully.');
   }
 
   /**

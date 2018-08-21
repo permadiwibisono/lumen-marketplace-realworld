@@ -24,7 +24,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function($api) use(
     $api->post('login', 'AuthController@login');
     $api->post('logout', 'AuthController@logout');
     $api->post('refresh', 'AuthController@refresh');
-    $api->post('me', 'AuthController@me');
+    $api->get('me', 'AuthController@me');
+    $api->post('register', 'AuthController@register');
   });
 });
 $api->version('v2', function($api) use($router){
