@@ -133,9 +133,10 @@ $app['Dingo\Api\Exception\Handler']->setErrorFormat([
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+  'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+  require __DIR__.'/../routes/web.php';
+  require __DIR__.'/../routes/dashboard.php';
 });
 
 return $app;

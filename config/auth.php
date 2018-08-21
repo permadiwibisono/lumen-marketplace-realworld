@@ -39,6 +39,10 @@ return [
     'api' => [
       'driver' => 'jwt', 
       'provider' => 'user_provider'
+    ],
+    'dashboard' => [
+      'driver' => 'jwt', 
+      'provider' => 'admin_provider'
     ]
   ],
 
@@ -63,6 +67,10 @@ return [
     'user_provider' => [
       'driver' => 'eloquent',
       'model'  => \App\Models\User::class
+    ],
+    'admin_provider' => [
+      'driver' => 'eloquent',
+      'model'  => \App\Models\UserAdmin::class
     ]
   ],
 
