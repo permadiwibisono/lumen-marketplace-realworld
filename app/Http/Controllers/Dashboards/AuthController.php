@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Dashboards;
 
 use App\Http\Contracts\IAuth as IAuthContractController;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Dashboards\BaseController;
 use App\Http\Traits\AuthAdmin;
 use App\Http\Traits\ResponseHelpers;
 use App\Models\UserAdmin;
 use Dingo\Api\Http\Request;
 use Validator;
 
-class AuthController extends Controller implements IAuthContractController
+class AuthController extends BaseController implements IAuthContractController
 {
-  use ResponseHelpers, AuthAdmin;
+  use ResponseHelpers;
 
   /**
    * Create a new AuthController instance.
@@ -21,13 +21,8 @@ class AuthController extends Controller implements IAuthContractController
    */
   public function __construct()
   {
-    $this->setGuard();
-    $this->middleware("auth:{$this->guard}", ['except' => ['login']]);
-  }
-
-  private function setGuard()
-  {
-    $this->guard = env('AUTH_GUARD_DASHBOARD', 'dashboard');
+    parent::__construct();
+    $this->middleware($this->authMiddleware, ['except' => ['login']]);
   }
 
   /**

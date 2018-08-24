@@ -10,4 +10,9 @@ trait AuthAdmin {
   {
     return auth($this->guard);
   }
+
+  private function setGuard()
+  {
+    $this->guard = env('AUTH_GUARD_DASHBOARD', 'dashboard');
+  }
 }
