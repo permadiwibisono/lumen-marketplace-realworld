@@ -16,10 +16,7 @@
 // });
 $api = app('Dingo\Api\Routing\Router');
 $api->version('v1', ['namespace' => 'App\Http\Controllers'], function($api) use($router){
-  $api->get('/', function() use($router){
-    return response()->json(['message'=>'Marketplace\'s API','status_code'=>200,'framework'=>$router->app->version()],200);
-  });
-  $api->get('/hello', 'ExampleController@index');
+  $api->get('/', 'HomeController@index');
   $api->group(['prefix' => 'auth'], function($api) {
     $api->post('login', 'AuthController@login');
     $api->post('logout', 'AuthController@logout');

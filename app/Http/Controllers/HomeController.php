@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-class ExampleController extends Controller
+use App\Http\Traits\ResponseHelpers;
+
+class HomeController extends Controller
 {
+  use ResponseHelpers;
   /**
    * Create a new controller instance.
    *
@@ -13,8 +16,9 @@ class ExampleController extends Controller
   {
       //
   }
+
   public function index()
   {
-    return response()->json(['message'=>'Hello World!','status_code'=>200],200);
+    return $this->createResponse(['framework' => app()->version()], 'Marketplace\'s API.');
   }
 }
