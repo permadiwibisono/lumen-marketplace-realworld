@@ -28,6 +28,7 @@
   "autoload-dev": {
     "classmap": [
       "tests/",
+      "tests/Dashboards/",
       "database/"
     ]
   },
