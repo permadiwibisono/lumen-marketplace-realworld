@@ -57,7 +57,7 @@ class DashboardHomeControllerTest extends TestCase
   public function testAdminCanGetHomeDashboardApiSuccessfully()
   {
     $admin = factory(App\Models\UserAdmin::class)->create();
-    $this->actingAs($admin, 'dashboard')
+    $this->actingAs($admin, env('AUTH_GUARD_DASHBOARD'))
       ->json('GET', '/dashs')
       ->seeJsonEquals([
         'data' => [ 
