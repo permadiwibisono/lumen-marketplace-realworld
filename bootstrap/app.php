@@ -72,7 +72,8 @@ $app->singleton(
 */
 
 // $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
+//    // App\Http\Middleware\ParseHeadersMiddleware::class,
+//    App\Http\Middleware\ExampleMiddleware::class,
 // ]);
 
 $app->routeMiddleware([
@@ -106,9 +107,21 @@ if(class_exists('Tymon\JWTAuth\Providers\LumenServiceProvider'))
   $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 // $app->register(App\Providers\EventServiceProvider::class);
-
 $app['Dingo\Api\Http\RateLimit\Handler']->extend(function ($app) {
     return new Dingo\Api\Http\RateLimit\Throttle\Authenticated;
+});
+
+$app['Dingo\Api\Auth\Auth']->extend('oauth', function ($app) {
+   return new Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
+});
+
+
+$app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
+    $fractal = new League\Fractal\Manager;
+
+    $fractal->setSerializer(new League\Fractal\Serializer\JsonApiSerializer);
+
+    return new Dingo\Api\Transformer\Adapter\Fractal($fractal);
 });
 
 $app['Dingo\Api\Exception\Handler']->setErrorFormat([

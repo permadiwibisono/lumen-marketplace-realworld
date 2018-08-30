@@ -20,6 +20,7 @@ class AuthController extends Controller implements IAuthContractController
    */
   public function __construct()
   {
+    $this->middleware('jwt.auth', ['except' => ['login', 'register']]);
     $this->middleware('auth:api', ['except' => ['login', 'register']]);
   }
 
@@ -99,7 +100,8 @@ class AuthController extends Controller implements IAuthContractController
    */
   public function refresh()
   {
-    return $this->respondWithToken(auth()->refresh(), 'Token refresh successfully.');
+    // auth()->invalidate();
+    return $this->respondWithToken(auth()->refresh(true), 'Token refresh successfully.');
   }
 
   /**
