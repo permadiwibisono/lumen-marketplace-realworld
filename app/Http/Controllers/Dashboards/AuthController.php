@@ -22,6 +22,7 @@ class AuthController extends BaseController implements IAuthContractController
   public function __construct()
   {
     parent::__construct();
+    $this->middleware('jwt.auth', ['except' => ['login']]);
     $this->middleware($this->authMiddleware, ['except' => ['login']]);
   }
 
