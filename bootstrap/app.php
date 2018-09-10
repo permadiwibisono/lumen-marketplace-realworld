@@ -24,10 +24,20 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->configure('database');
+$app->configure('auth');
 
 $app->withFacades();
 
 $app->withEloquent();
+
+if(!class_exists('DingoApi'))
+  class_alias('Dingo\Api\Facade\API', 'DingoApi');
+
+if(!class_exists('DingoRoute'))
+  class_alias('Dingo\Api\Facade\Route', 'DingoRoute');
+
+if (!class_exists('Config'))
+  class_alias('Illuminate\Support\Facades\Config', 'Config');
 
 /*
 |--------------------------------------------------------------------------
@@ -62,12 +72,13 @@ $app->singleton(
 */
 
 // $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
+//    // App\Http\Middleware\ParseHeadersMiddleware::class,
+//    App\Http\Middleware\ExampleMiddleware::class,
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+  'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -80,9 +91,48 @@ $app->singleton(
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+if(class_exists('App\Providers\AppServiceProvider'))
+  $app->register(App\Providers\AppServiceProvider::class);
+
+if(class_exists('Laravel\Tinker\TinkerServiceProvider'))
+  $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+
+if(class_exists('Dingo\Api\Provider\LumenServiceProvider'))
+  $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+
+if(class_exists('App\Providers\AuthServiceProvider'))
+  $app->register(App\Providers\AuthServiceProvider::class);
+
+if(class_exists('Tymon\JWTAuth\Providers\LumenServiceProvider'))
+  $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
 // $app->register(App\Providers\EventServiceProvider::class);
+$app['Dingo\Api\Http\RateLimit\Handler']->extend(function ($app) {
+    return new Dingo\Api\Http\RateLimit\Throttle\Authenticated;
+});
+
+$app['Dingo\Api\Auth\Auth']->extend('oauth', function ($app) {
+   return new Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
+});
+
+
+$app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
+    $fractal = new League\Fractal\Manager;
+
+    $fractal->setSerializer(new League\Fractal\Serializer\JsonApiSerializer);
+
+    return new Dingo\Api\Transformer\Adapter\Fractal($fractal);
+});
+
+$app['Dingo\Api\Exception\Handler']->setErrorFormat([
+  'error' => [
+    'message' => ':message',
+    'errors' => ':errors',
+    'code' => ':code',
+    'status_code' => ':status_code',
+    'debug' => ':debug'
+  ]
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -96,9 +146,10 @@ $app->singleton(
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+  'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+  require __DIR__.'/../routes/web.php';
+  require __DIR__.'/../routes/dashboard.php';
 });
 
 return $app;

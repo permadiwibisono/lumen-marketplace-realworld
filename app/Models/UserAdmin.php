@@ -10,7 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class UserAdmin extends Model implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
   use Authenticatable, Authorizable, SoftDeletes;
 
@@ -21,7 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
    */
   protected $guarded = [];
 
-  protected $table = 'user';
+  protected $table = 'user_admin';
 
   protected $dates = ['birth_at', 'deleted_at', 'created_at', 'updated_at'];
 
@@ -44,11 +44,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     return $this->morphOne('App\Models\UserEmailToken', 'user', 'type', 'user_id'); 
   }
   
-  public function wallet()
-  {
-    return $this->hasOne('App\Models\UserWallet'); 
-  }
-
   /**
    * Get the identifier that will be stored in the subject claim of the JWT.
    *

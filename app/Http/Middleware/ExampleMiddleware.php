@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ExampleMiddleware
 {
@@ -15,6 +16,9 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+      if(env('APP_ENV') === 'testing' && array_key_exists('HTTP_AUTHORIZATION', $request->server())){
+        JWTAuth::setRequest($request);
+      }
+      return $next($request);
     }
 }
