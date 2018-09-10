@@ -12,17 +12,20 @@ class UserAdminSeeder extends Seeder
    */
   public function run()
   {
-    DB::table('user_admin')->truncate();
-    UserAdmin::create([
+    UserAdmin::where('email', 'pewe@company.com')->firstOrCreate([
       'email' => 'pewe@company.com',
       'password' => app('hash')->make('secret')
     ]);
-    UserAdmin::create([
+    UserAdmin::where('email', 'administrator@company.com')->firstOrCreate([
       'email' => 'administrator@company.com',
       'password' => app('hash')->make('secret')
     ]);
-    UserAdmin::create([
+    UserAdmin::where('email', 'developer@company.com')->firstOrCreate([
       'email' => 'developer@company.com',
+      'password' => app('hash')->make('secret')
+    ]);
+    UserAdmin::where('email', 'user_test@company.com')->firstOrCreate([
+      'email' => 'user_test@company.com',
       'password' => app('hash')->make('secret')
     ]);
     factory(UserAdmin::class, 5)->create();

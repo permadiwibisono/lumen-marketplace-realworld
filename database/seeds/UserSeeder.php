@@ -13,5 +13,9 @@ class UserSeeder extends Seeder
   public function run()
   {
     factory(User::class, 5)->create();
+
+    //Create User for Test.
+    $user = User::where('email', 'user_test@company.com')
+     ->firstOrCreate(['email' => 'user_test@company.com', 'password' => app('hash')->make('secret')]);
   }
 }
